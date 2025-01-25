@@ -38,6 +38,8 @@ public class Ride {
 
     private Double fare;
 
+    private String otp;
+
     @CreationTimestamp
     private LocalDateTime requestedTime;
 

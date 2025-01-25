@@ -1,7 +1,5 @@
 package com.vaghani.project.ridesharing.ridesharingapp.dto;
 
-import com.vaghani.project.ridesharing.ridesharingapp.entities.Driver;
-import com.vaghani.project.ridesharing.ridesharingapp.entities.Rider;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.PaymentMethod;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import lombok.AllArgsConstructor;
@@ -29,6 +27,8 @@ public class RideDto {
     private RideStatus rideStatus;
 
     private Double fare;
+
+    private String otp;
 
     private LocalDateTime requestedTime;
 
