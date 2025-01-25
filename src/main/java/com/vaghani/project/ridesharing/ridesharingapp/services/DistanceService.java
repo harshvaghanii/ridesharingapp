@@ -1,6 +1,7 @@
 package com.vaghani.project.ridesharing.ridesharingapp.services;
 
-import org.geolatte.geom.Point;
+
+import org.locationtech.jts.geom.Point;
 
 public interface DistanceService {
 

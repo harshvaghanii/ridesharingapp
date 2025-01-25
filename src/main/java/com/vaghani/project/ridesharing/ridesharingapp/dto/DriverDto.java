@@ -13,5 +13,6 @@ public class DriverDto {
 
     private Double rating;
 
+    private String vehicleId;
 
 }
