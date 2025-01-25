@@ -1,13 +1,14 @@
 package com.vaghani.project.ridesharing.ridesharingapp.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Rider {
 
     @Id

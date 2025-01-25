@@ -5,8 +5,11 @@ import com.vaghani.project.ridesharing.ridesharingapp.dto.RideDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RideRequestDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RiderDto;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.RideRequest;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.Rider;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.User;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequestStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RideRequestRepository;
+import com.vaghani.project.ridesharing.ridesharingapp.repositories.RiderRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RiderService;
 import com.vaghani.project.ridesharing.ridesharingapp.strategies.DriverMatchingStrategy;
 import com.vaghani.project.ridesharing.ridesharingapp.strategies.RideFareCalculationStrategy;
@@ -26,6 +29,7 @@ public class RiderServiceImpl implements RiderService {
     private final RideFareCalculationStrategy rideFareCalculationStrategy;
     private final DriverMatchingStrategy driverMatchingStrategy;
     private final RideRequestRepository rideRequestRepository;
+    private final RiderRepository riderRepository;
 
     @Override
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
@@ -56,5 +60,15 @@ public class RiderServiceImpl implements RiderService {
     @Override
     public List<RideDto> getAllMyRides() {
         return List.of();
+    }
+
+    @Override
+    public Rider createNewRider(User user) {
+        Rider rider = Rider
+                .builder()
+                .user(user)
+                .rating(0.0)
+                .build();
+        return riderRepository.save(rider);
     }
 }

@@ -4,7 +4,8 @@ import com.vaghani.project.ridesharing.ridesharingapp.dto.DriverDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RideDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RideRequestDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RiderDto;
-import org.springframework.stereotype.Service;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.Rider;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.User;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface RiderService {
     RiderDto getMyProfile();
 
     List<RideDto> getAllMyRides();
+
+    Rider createNewRider(User user);
 }
