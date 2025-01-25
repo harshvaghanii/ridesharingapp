@@ -3,17 +3,18 @@ package com.vaghani.project.ridesharing.ridesharingapp.entities;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.PaymentMethod;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequestStatus;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.ToString;
 import org.locationtech.jts.geom.Point;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
+@ToString
 public class RideRequest {
 
     @Id
@@ -37,5 +38,7 @@ public class RideRequest {
 
     @Enumerated(EnumType.STRING)
     private RideRequestStatus rideRequestStatus;
+
+    private Double fare;
 
 }

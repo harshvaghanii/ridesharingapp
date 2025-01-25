@@ -1,7 +1,7 @@
 package com.vaghani.project.ridesharing.ridesharingapp.services.impl;
 
 import com.vaghani.project.ridesharing.ridesharingapp.services.DistanceService;
-import org.geolatte.geom.Point;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
 @Service
