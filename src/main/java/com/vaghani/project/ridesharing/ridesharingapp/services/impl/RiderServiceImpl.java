@@ -38,11 +38,13 @@ public class RiderServiceImpl implements RiderService {
         RideRequest rideRequest = modelMapper.map(rideRequestDto, RideRequest.class);
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
         RideFareCalculationStrategy rideFareCalculationStrategy = strategyManager.rideFareCalculationStrategy();
+        log.info("I'm here before calculating the fare!");
         Double fare = rideFareCalculationStrategy.calculateFare(rideRequest);
         rideRequest.setFare(fare);
         DriverMatchingStrategy driverMatchingStrategy = strategyManager.driverMatchingStrategy(rider.getRating());
         driverMatchingStrategy.findMatchingDriver(rideRequest);
         log.info(STR."I'm here in the log!!! \{rideRequest.toString()}");
+        rideRequest.setRider(rider);
         return modelMapper.map(rideRequestRepository.save(rideRequest), RideRequestDto.class);
     }
 

@@ -11,12 +11,13 @@ import java.util.List;
 @Service
 public class DistanceServiceOSRMImpl implements DistanceService {
 
-    private static String OSRM_API_BASE_URL = "https://router.project-osrm.org/route/v1/driving/13.388860,52.517037;13.397634,52.529407";
+//    private static String OSRM_API_BASE_URL = "https://router.project-osrm.org/route/v1/driving/13.388860,52.517037;13.397634,52.529407";
 
+    private static String OSRM_API_BASE_URL = "https://router.project-osrm.org/route/v1/driving/";
     @Override
     public double calculateDistance(Point src, Point dest) {
         try {
-            String uri = STR."\{src.getX()},\{src.getY()};\{dest.getX()},\{dest.getY()}";
+            String uri = src.getX()+","+src.getY()+";"+dest.getX()+","+dest.getY();
             OSRMResponseDto responseDto = RestClient.builder()
                     .baseUrl(OSRM_API_BASE_URL)
                     .build()
@@ -24,7 +25,7 @@ public class DistanceServiceOSRMImpl implements DistanceService {
                     .uri(uri)
                     .retrieve()
                     .body(OSRMResponseDto.class);
-            return responseDto.getRoutes().getFirst().getDistance() / 1000.0;
+            return responseDto.getRoutes().get(0).getDistance() / 1000.0;
         } catch (Exception exception) {
             throw new RuntimeException(STR."Error getting data from OSMR \{exception.getMessage()}");
         }
