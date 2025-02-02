@@ -3,11 +3,13 @@ package com.vaghani.project.ridesharing.ridesharingapp.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.geolatte.geom.Point;
 
 @Entity
 @Getter
 @Setter
+@ToString
 public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
