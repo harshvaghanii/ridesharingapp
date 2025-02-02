@@ -1,13 +1,14 @@
 package com.vaghani.project.ridesharing.ridesharingapp.services.impl;
 
-import com.vaghani.project.ridesharing.ridesharingapp.dto.RideRequestDto;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Driver;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Ride;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.RideRequest;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.Rider;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequestStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RideRepository;
+import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideRequestService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideService;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +34,6 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public void matchWithDrivers(RideRequestDto rideRequestDto) {
-
-    }
-
-    @Override
     public Ride createNewRide(RideRequest rideRequest, Driver driver) {
         Ride ride = modelMapper.map(rideRequest, Ride.class);
         ride.setDriver(driver);
@@ -56,13 +52,13 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Page<Ride> getAllRidesOfRider(Long riderId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest) {
+        return rideRepository.findByRider(rider, pageRequest);
     }
 
     @Override
-    public Page<Ride> getAllRidesOfDriver(Long driverId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest) {
+        return rideRepository.findByDriver(driver, pageRequest);
     }
 
     private String generateRandomOTP() {

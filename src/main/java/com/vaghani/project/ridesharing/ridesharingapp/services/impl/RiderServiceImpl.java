@@ -4,14 +4,14 @@ import com.vaghani.project.ridesharing.ridesharingapp.dto.DriverDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RideDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RideRequestDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RiderDto;
-import com.vaghani.project.ridesharing.ridesharingapp.entities.Driver;
-import com.vaghani.project.ridesharing.ridesharingapp.entities.RideRequest;
-import com.vaghani.project.ridesharing.ridesharingapp.entities.Rider;
-import com.vaghani.project.ridesharing.ridesharingapp.entities.User;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.*;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequestStatus;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RideRequestRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RiderRepository;
+import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
+import com.vaghani.project.ridesharing.ridesharingapp.services.RideService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RiderService;
 import com.vaghani.project.ridesharing.ridesharingapp.strategies.DriverMatchingStrategy;
 import com.vaghani.project.ridesharing.ridesharingapp.strategies.RideFareCalculationStrategy;
@@ -19,6 +19,8 @@ import com.vaghani.project.ridesharing.ridesharingapp.strategies.RideStrategyMan
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,8 @@ public class RiderServiceImpl implements RiderService {
     private final RideStrategyManager strategyManager;
     private final RideRequestRepository rideRequestRepository;
     private final RiderRepository riderRepository;
+    private final RideService rideService;
+    private final DriverService driverService;
 
     @Override
     @Transactional
@@ -54,7 +58,19 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public RideDto cancelRide(Long rideId) {
-        return null;
+        Rider rider = getCurrentRider();
+        Ride ride = rideService.getRideById(rideId);
+        if (!rider.equals(ride.getRider())) {
+            throw new RuntimeException("Cannot cancel the ride as this ride does not belong to this rider!");
+        }
+
+        if (ride.getRideStatus() != RideStatus.CONFIRMED) {
+            throw new RuntimeException("Cannot cancel this ride as this is not in the Confirmed State!");
+        }
+
+        Ride updatedRide = rideService.updateRideStatus(ride, RideStatus.CANCELLED);
+        driverService.updateDriverAvailability(ride.getDriver(), true);
+        return modelMapper.map(updatedRide, RideDto.class);
     }
 
     @Override
@@ -64,12 +80,14 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public RiderDto getMyProfile() {
-        return null;
+        return modelMapper.map(getCurrentRider(), RiderDto.class);
     }
 
     @Override
-    public List<RideDto> getAllMyRides() {
-        return List.of();
+    public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
+        Rider currentRider = getCurrentRider();
+        return rideService.getAllRidesOfRider(currentRider, pageRequest)
+                .map(ride -> modelMapper.map(ride, RideDto.class));
     }
 
     @Override
