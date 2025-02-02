@@ -11,6 +11,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.DriverRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
+import com.vaghani.project.ridesharing.ridesharingapp.services.PaymentService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideRequestService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final RideService rideService;
     private final ModelMapper modelMapper;
+    private final PaymentService paymentService;
 
     @Override
     @Transactional
@@ -92,8 +94,27 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
+    @Transactional
     public RideDto endRide(Long rideId) {
-        return null;
+        Driver currentDriver = getCurrentDriver();
+        Ride ride = rideService.getRideById(rideId);
+
+        if (!currentDriver.equals(ride.getDriver())) {
+            throw new RuntimeException("Not authorized to cancel the ride!");
+        }
+
+        if (ride.getRideStatus() != RideStatus.ONGOING) {
+            throw new RuntimeException("Cannot end ride, since it is not Ongoing!");
+        }
+
+        ride.setEndedAt(LocalDateTime.now());
+        Ride updatedRide = rideService.updateRideStatus(ride, RideStatus.ENDED);
+        updateDriverAvailability(currentDriver, true);
+
+        paymentService.processPayment(updatedRide);
+
+        return modelMapper.map(updatedRide, RideDto.class);
+
     }
 
     @Override
