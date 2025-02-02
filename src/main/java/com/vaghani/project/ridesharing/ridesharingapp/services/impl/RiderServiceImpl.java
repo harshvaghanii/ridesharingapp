@@ -4,6 +4,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.dto.DriverDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RideDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RideRequestDto;
 import com.vaghani.project.ridesharing.ridesharingapp.dto.RiderDto;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.Driver;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.RideRequest;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Rider;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.User;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,17 +35,19 @@ public class RiderServiceImpl implements RiderService {
     private final RiderRepository riderRepository;
 
     @Override
+    @Transactional
     public RideRequestDto requestRide(RideRequestDto rideRequestDto) {
         Rider rider = getCurrentRider();
         RideRequest rideRequest = modelMapper.map(rideRequestDto, RideRequest.class);
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
         RideFareCalculationStrategy rideFareCalculationStrategy = strategyManager.rideFareCalculationStrategy();
-        log.info("I'm here before calculating the fare!");
         Double fare = rideFareCalculationStrategy.calculateFare(rideRequest);
         rideRequest.setFare(fare);
         DriverMatchingStrategy driverMatchingStrategy = strategyManager.driverMatchingStrategy(rider.getRating());
-        driverMatchingStrategy.findMatchingDriver(rideRequest);
-        log.info(STR."I'm here in the log!!! \{rideRequest.toString()}");
+        List<Driver> matchingDrivers = driverMatchingStrategy.findMatchingDriver(rideRequest);
+
+        //TODO: Send notifications to the matching drivers
+
         rideRequest.setRider(rider);
         return modelMapper.map(rideRequestRepository.save(rideRequest), RideRequestDto.class);
     }

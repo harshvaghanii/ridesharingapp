@@ -2,7 +2,6 @@ package com.vaghani.project.ridesharing.ridesharingapp.entities;
 
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.Role;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
