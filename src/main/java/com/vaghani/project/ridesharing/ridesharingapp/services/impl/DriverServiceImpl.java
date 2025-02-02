@@ -7,6 +7,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.entities.Driver;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Ride;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.RideRequest;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequestStatus;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.DriverRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
@@ -17,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -49,7 +51,8 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public RideDto startRide(Long rideId) {
+    @Transactional
+    public RideDto startRide(Long rideId, String OTP) {
         return null;
     }
 

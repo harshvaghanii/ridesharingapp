@@ -13,7 +13,7 @@ public interface DriverService {
 
     RideDto cancelRide(Long rideId);
 
-    RideDto startRide(Long rideId);
+    RideDto startRide(Long rideId, String OTP);
 
     RideDto endRide(Long rideId);
 
