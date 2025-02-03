@@ -22,11 +22,25 @@ public class DriverController {
         return ResponseEntity.ok(rideDto);
     }
 
-    @PostMapping(path = "/startRide/{rideId}/{otp}")
+    @PostMapping(path = "/startRide/{rideId}")
     public ResponseEntity<RideDto> startRide(@PathVariable Long rideId,
                                              @RequestBody RideStartDto rideStartDto) {
         log.info("Here is the otp sent in the body: {} ", rideStartDto.getOtp());
         RideDto rideDto = driverService.startRide(rideId, rideStartDto.getOtp());
+        return ResponseEntity.ok(rideDto);
+    }
+
+    @PostMapping(path = "/endRide/{rideId}")
+    public ResponseEntity<RideDto> endRide(@PathVariable Long rideId) {
+        log.info("The Ride id to end: {} ", rideId);
+        RideDto rideDto = driverService.endRide(rideId);
+        return ResponseEntity.ok(rideDto);
+    }
+
+    @PostMapping(path = "/cancelRide/{rideId}")
+    public ResponseEntity<RideDto> cancelRide(@PathVariable Long rideId) {
+        log.info("The Ride id to cancel: {} ", rideId);
+        RideDto rideDto = driverService.cancelRide(rideId);
         return ResponseEntity.ok(rideDto);
     }
 

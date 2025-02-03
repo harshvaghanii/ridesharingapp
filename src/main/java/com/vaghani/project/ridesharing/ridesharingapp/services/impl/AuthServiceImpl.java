@@ -9,6 +9,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.exceptions.RuntimeConflict
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.UserRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.services.AuthService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RiderService;
+import com.vaghani.project.ridesharing.ridesharingapp.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final RiderService riderService;
+    private final WalletService walletService;
 
     @Override
     public String login(String email, String password) {
@@ -39,13 +41,11 @@ public class AuthServiceImpl implements AuthService {
         }
         User mappedUser = modelMapper.map(signupDto, User.class);
         mappedUser.setRoles(Set.of(Role.RIDER));
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(mappedUser);
 
-        //TODO: Create User Related Entities
         riderService.createNewRider(savedUser);
-        //TODO: Add Wallet related service here
-
-        return modelMapper.map(user, UserDto.class);
+        walletService.createWallet(savedUser);
+        return modelMapper.map(savedUser, UserDto.class);
     }
 
     @Override

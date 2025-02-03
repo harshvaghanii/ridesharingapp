@@ -10,9 +10,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequest
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.DriverRepository;
-import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
-import com.vaghani.project.ridesharing.ridesharingapp.services.RideRequestService;
-import com.vaghani.project.ridesharing.ridesharingapp.services.RideService;
+import com.vaghani.project.ridesharing.ridesharingapp.services.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -32,6 +30,8 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final RideService rideService;
     private final ModelMapper modelMapper;
+    private final PaymentService paymentService;
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -88,17 +88,39 @@ public class DriverServiceImpl implements DriverService {
         }
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
+        paymentService.createNewPayment(savedRide);
+        ratingService.createNewRating(savedRide);
         return modelMapper.map(savedRide, RideDto.class);
     }
 
     @Override
+    @Transactional
     public RideDto endRide(Long rideId) {
-        return null;
+        Driver currentDriver = getCurrentDriver();
+        Ride ride = rideService.getRideById(rideId);
+
+        if (!currentDriver.equals(ride.getDriver())) {
+            throw new RuntimeException("Not authorized to cancel the ride!");
+        }
+
+        if (ride.getRideStatus() != RideStatus.ONGOING) {
+            throw new RuntimeException("Cannot end ride, since it is not Ongoing!");
+        }
+
+        ride.setEndedAt(LocalDateTime.now());
+        Ride updatedRide = rideService.updateRideStatus(ride, RideStatus.ENDED);
+        updateDriverAvailability(currentDriver, true);
+
+        paymentService.processPayment(updatedRide);
+
+        return modelMapper.map(updatedRide, RideDto.class);
+
     }
 
     @Override
     public RiderDto rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        return ratingService.rateRider(ride, rating);
     }
 
     @Override

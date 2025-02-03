@@ -3,11 +3,17 @@ package com.vaghani.project.ridesharing.ridesharingapp.entities;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.TransactionMethod;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.TransactionType;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class WalletTransaction {
 
     @Id
@@ -22,7 +28,7 @@ public class WalletTransaction {
     @Enumerated(EnumType.STRING)
     private TransactionMethod transactionMethod;
 
-    @OneToOne
+    @OneToOne 
     private Ride ride;
 
     private String transactionId;

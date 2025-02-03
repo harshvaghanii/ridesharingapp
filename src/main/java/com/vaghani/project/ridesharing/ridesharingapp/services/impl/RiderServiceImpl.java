@@ -11,6 +11,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoun
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RideRequestRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RiderRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
+import com.vaghani.project.ridesharing.ridesharingapp.services.RatingService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RiderService;
 import com.vaghani.project.ridesharing.ridesharingapp.strategies.DriverMatchingStrategy;
@@ -36,6 +37,7 @@ public class RiderServiceImpl implements RiderService {
     private final RideRequestRepository rideRequestRepository;
     private final RiderRepository riderRepository;
     private final RideService rideService;
+    private final RatingService ratingService;
     private final DriverService driverService;
 
     @Override
@@ -75,7 +77,8 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public DriverDto rateDriver(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        return ratingService.rateDriver(ride, rating);
     }
 
     @Override
@@ -105,4 +108,5 @@ public class RiderServiceImpl implements RiderService {
         // TODO: Implement Spring Security
         return riderRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException("Rider with id : " + 1 + " not found!"));
     }
+
 }
