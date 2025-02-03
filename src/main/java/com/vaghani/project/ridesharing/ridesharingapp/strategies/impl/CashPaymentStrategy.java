@@ -20,7 +20,7 @@ public class CashPaymentStrategy implements PaymentStrategy {
 
     @Override
     @Transactional
-    public void processPaymet(Payment payment) {
+    public void processPayment(Payment payment) {
         Driver driver = payment.getRide().getDriver();
         double platformCommission = payment.getAmount() * PLATFORM_COMMISSION;
 

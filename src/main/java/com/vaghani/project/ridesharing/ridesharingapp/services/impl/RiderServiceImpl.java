@@ -75,7 +75,10 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public DriverDto rateDriver(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = ride.getDriver();
+        Driver updatedDriver = driverService.updateDriverRating(driver, rating);
+        return modelMapper.map(updatedDriver, DriverDto.class);
     }
 
     @Override
@@ -101,8 +104,19 @@ public class RiderServiceImpl implements RiderService {
     }
 
     @Override
+    public Rider updateRiderRating(Rider rider, Integer rating) {
+        Rider currentRider = getCurrentRider();
+        if (!rider.equals(currentRider)) {
+            throw new RuntimeException("Not authorized to update the rating of the rider!");
+        }
+        rider.setRating((rider.getRating() + rating) / 2.0);
+        return riderRepository.save(rider);
+    }
+
+    @Override
     public Rider getCurrentRider() {
         // TODO: Implement Spring Security
         return riderRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException("Rider with id : " + 1 + " not found!"));
     }
+
 }
