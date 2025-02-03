@@ -11,6 +11,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoun
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RideRequestRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RiderRepository;
 import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
+import com.vaghani.project.ridesharing.ridesharingapp.services.RatingService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RiderService;
 import com.vaghani.project.ridesharing.ridesharingapp.strategies.DriverMatchingStrategy;
@@ -36,6 +37,7 @@ public class RiderServiceImpl implements RiderService {
     private final RideRequestRepository rideRequestRepository;
     private final RiderRepository riderRepository;
     private final RideService rideService;
+    private final RatingService ratingService;
     private final DriverService driverService;
 
     @Override
@@ -76,9 +78,7 @@ public class RiderServiceImpl implements RiderService {
     @Override
     public DriverDto rateDriver(Long rideId, Integer rating) {
         Ride ride = rideService.getRideById(rideId);
-        Driver driver = ride.getDriver();
-        Driver updatedDriver = driverService.updateDriverRating(driver, rating);
-        return modelMapper.map(updatedDriver, DriverDto.class);
+        return ratingService.rateDriver(ride, rating);
     }
 
     @Override
@@ -100,16 +100,6 @@ public class RiderServiceImpl implements RiderService {
                 .user(user)
                 .rating(0.0)
                 .build();
-        return riderRepository.save(rider);
-    }
-
-    @Override
-    public Rider updateRiderRating(Rider rider, Integer rating) {
-        Rider currentRider = getCurrentRider();
-        if (!rider.equals(currentRider)) {
-            throw new RuntimeException("Not authorized to update the rating of the rider!");
-        }
-        rider.setRating((rider.getRating() + rating) / 2.0);
         return riderRepository.save(rider);
     }
 

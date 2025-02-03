@@ -6,7 +6,6 @@ import com.vaghani.project.ridesharing.ridesharingapp.dto.RiderDto;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Driver;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Ride;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.RideRequest;
-import com.vaghani.project.ridesharing.ridesharingapp.entities.Rider;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequestStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
@@ -32,7 +31,7 @@ public class DriverServiceImpl implements DriverService {
     private final RideService rideService;
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
-    private final RiderService riderService;
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -90,6 +89,7 @@ public class DriverServiceImpl implements DriverService {
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
         paymentService.createNewPayment(savedRide);
+        ratingService.createNewRating(savedRide);
         return modelMapper.map(savedRide, RideDto.class);
     }
 
@@ -120,9 +120,7 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public RiderDto rateRider(Long rideId, Integer rating) {
         Ride ride = rideService.getRideById(rideId);
-        Rider rider = ride.getRider();
-        Rider updatedRider = riderService.updateRiderRating(rider, rating);
-        return modelMapper.map(updatedRider, RiderDto.class);
+        return ratingService.rateRider(ride, rating);
     }
 
     @Override
@@ -137,16 +135,6 @@ public class DriverServiceImpl implements DriverService {
         return rideService.getAllRidesOfDriver(currentDriver, pageRequest).map(
                 ride -> modelMapper.map(ride, RideDto.class)
         );
-    }
-
-    @Override
-    public Driver updateDriverRating(Driver driver, Integer rating) {
-        Driver currentDriver = getCurrentDriver();
-        if (!driver.equals(currentDriver)) {
-            throw new RuntimeException("Not authorized to update the Driver's rating!");
-        }
-        driver.setRating((driver.getRating() + rating) / 2.0);
-        return driverRepository.save(driver);
     }
 
     @Override

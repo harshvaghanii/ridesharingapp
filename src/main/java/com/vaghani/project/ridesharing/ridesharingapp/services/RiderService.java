@@ -25,5 +25,4 @@ public interface RiderService {
 
     Rider getCurrentRider();
 
-    Rider updateRiderRating(Rider rider, Integer rating);
 }
