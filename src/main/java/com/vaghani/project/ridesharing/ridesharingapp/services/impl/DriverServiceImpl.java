@@ -84,7 +84,7 @@ public class DriverServiceImpl implements DriverService {
 
         if (!OTP.equals(ride.getOtp())) {
             log.info("Error verifying the otp. Current otp: {} and Actual otp is : {}", OTP, ride.getOtp());
-            throw new RuntimeException("otp is not valid!");
+            throw new RuntimeException("Otp is not valid!");
         }
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
