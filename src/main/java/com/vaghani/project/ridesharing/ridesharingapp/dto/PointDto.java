@@ -5,13 +5,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PointDTO {
+public class PointDto {
 
     private double[] coordinates;
 
     private String type = "Point";
 
-    public PointDTO(double[] coordinates) {
+    public PointDto(double[] coordinates) {
         this.coordinates = coordinates;
     }
 

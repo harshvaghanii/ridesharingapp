@@ -29,9 +29,12 @@ public class RatingServiceImpl implements RatingService {
         Driver driver = ride.getDriver();
         Rating ratingObj = ratingRepository.findByRide(ride)
                 .orElseThrow(() -> new RuntimeException("Rating object not found!"));
+        validateRating(rating);
+        if (ratingObj.getDriverRating() != null) {
+            throw new RuntimeException("You have already rated the driver for this ride!");
+        }
         ratingObj.setDriverRating(rating);
         ratingRepository.save(ratingObj);
-
         driver.setRating((driver.getRating() + rating) / 2.0);
         Driver updatedDriver = driverRepository.save(driver);
         return modelMapper.map(updatedDriver, DriverDto.class);
@@ -42,6 +45,10 @@ public class RatingServiceImpl implements RatingService {
         Rider rider = ride.getRider();
         Rating ratingObj = ratingRepository.findByRide(ride)
                 .orElseThrow(() -> new RuntimeException("Rating object not found!"));
+        validateRating(rating);
+        if (ratingObj.getRiderRating() != null) {
+            throw new RuntimeException("You have already rated the rider for this ride!");
+        }
         ratingObj.setRiderRating(rating);
         ratingRepository.save(ratingObj);
 
@@ -58,5 +65,13 @@ public class RatingServiceImpl implements RatingService {
                 .ride(ride)
                 .build();
         ratingRepository.save(rating);
+    }
+
+    @Override
+    public void validateRating(Integer rating) {
+        if (!(rating <= 0 || rating > 5)) {
+            return;
+        }
+        throw new RuntimeException("Invalid Rating Provided!");
     }
 }

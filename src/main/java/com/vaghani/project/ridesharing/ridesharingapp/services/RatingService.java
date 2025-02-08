@@ -12,4 +12,5 @@ public interface RatingService {
 
     void createNewRating(Ride ride);
 
+    void validateRating(Integer rating);
 }
