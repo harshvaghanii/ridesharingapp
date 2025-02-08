@@ -1,6 +1,6 @@
 package com.vaghani.project.ridesharing.ridesharingapp.configs;
 
-import com.vaghani.project.ridesharing.ridesharingapp.dto.PointDTO;
+import com.vaghani.project.ridesharing.ridesharingapp.dto.PointDto;
 import com.vaghani.project.ridesharing.ridesharingapp.utils.GeometryUtil;
 import org.locationtech.jts.geom.Point;
 import org.modelmapper.ModelMapper;
@@ -14,18 +14,18 @@ public class MapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
 
-        mapper.typeMap(PointDTO.class, Point.class).setConverter(converter -> {
-            PointDTO pointDTO = converter.getSource();
+        mapper.typeMap(PointDto.class, Point.class).setConverter(converter -> {
+            PointDto pointDTO = converter.getSource();
             return GeometryUtil.createPoint(pointDTO);
         });
 
-        mapper.typeMap(Point.class, PointDTO.class).setConverter(context -> {
+        mapper.typeMap(Point.class, PointDto.class).setConverter(context -> {
             Point point = context.getSource();
             double[] coordinates = {
                     point.getX(),
                     point.getY()
             };
-            return new PointDTO(coordinates);
+            return new PointDto(coordinates);
         });
 
         return mapper;

@@ -1,15 +1,16 @@
 package com.vaghani.project.ridesharing.ridesharingapp.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.geolatte.geom.Point;
 
 @Entity
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

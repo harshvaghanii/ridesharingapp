@@ -15,9 +15,9 @@ public class RideRequestDto {
 
     private Long id;
 
-    private PointDTO pickUpLocation;
+    private PointDto pickUpLocation;
 
-    private PointDTO dropOffLocation;
+    private PointDto dropOffLocation;
 
     private LocalDateTime requestedTime;
 

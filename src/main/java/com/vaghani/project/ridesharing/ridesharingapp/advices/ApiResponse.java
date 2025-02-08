@@ -1,9 +1,11 @@
 package com.vaghani.project.ridesharing.ridesharingapp.advices;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 public class ApiResponse<T> {
 
     @JsonFormat(pattern = "hh:mm:ss dd-MM-yyyy")

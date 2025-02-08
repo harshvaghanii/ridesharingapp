@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @Data
 public class RideDto {
 
-    private PointDTO pickUpLocation;
+    private PointDto pickUpLocation;
 
-    private PointDTO dropOffLocation;
+    private PointDto dropOffLocation;
 
     private RiderDto rider;
 
