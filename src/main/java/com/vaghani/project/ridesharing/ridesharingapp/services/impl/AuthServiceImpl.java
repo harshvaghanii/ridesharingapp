@@ -15,6 +15,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.services.RiderService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final RiderService riderService;
     private final WalletService walletService;
     private final DriverService driverService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public String login(String email, String password) {
@@ -45,6 +47,9 @@ public class AuthServiceImpl implements AuthService {
         }
         User mappedUser = modelMapper.map(signupDto, User.class);
         mappedUser.setRoles(Set.of(Role.RIDER));
+
+        mappedUser.setPassword(passwordEncoder.encode(mappedUser.getPassword()));
+
         User savedUser = userRepository.save(mappedUser);
 
         riderService.createNewRider(savedUser);
