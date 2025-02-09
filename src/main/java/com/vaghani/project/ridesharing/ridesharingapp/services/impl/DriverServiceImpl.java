@@ -6,6 +6,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.dto.RiderDto;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Driver;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.Ride;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.RideRequest;
+import com.vaghani.project.ridesharing.ridesharingapp.entities.User;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequestStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,8 +151,9 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver getCurrentDriver() {
-        //TODO : Implement this after having the Spring Security in place
-        return driverRepository.findById(2l).orElseThrow(() -> new ResourceNotFoundException("Driver with id " + 2L + " not found!"));
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return driverRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not associated with the User!"));
     }
 
     @Override
