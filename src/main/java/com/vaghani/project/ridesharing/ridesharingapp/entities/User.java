@@ -29,7 +29,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     Set<Role> roles;
 
