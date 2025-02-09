@@ -6,7 +6,7 @@ import com.vaghani.project.ridesharing.ridesharingapp.dto.UserDto;
 
 public interface AuthService {
 
-    String login(String email, String password);
+    String[] login(String email, String password);
 
     UserDto signup(SignupDto signupDto);
 

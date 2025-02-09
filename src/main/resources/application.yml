@@ -1,6 +1,7 @@
 server:
   port: 8081
 
+jwtSecretKey: jwt.secretKey = pai23dfqg43j51b4hjbhcafifa87dsf6hk32jhkrj9a7daskjhalkasdf97823
 
 spring:
   datasource:

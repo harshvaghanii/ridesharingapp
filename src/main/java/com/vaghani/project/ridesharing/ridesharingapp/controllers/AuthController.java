@@ -1,10 +1,10 @@
 package com.vaghani.project.ridesharing.ridesharingapp.controllers;
 
-import com.vaghani.project.ridesharing.ridesharingapp.dto.DriverDto;
-import com.vaghani.project.ridesharing.ridesharingapp.dto.OnboardDriverDto;
-import com.vaghani.project.ridesharing.ridesharingapp.dto.SignupDto;
-import com.vaghani.project.ridesharing.ridesharingapp.dto.UserDto;
+import com.vaghani.project.ridesharing.ridesharingapp.dto.*;
 import com.vaghani.project.ridesharing.ridesharingapp.services.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,16 @@ public class AuthController {
     public ResponseEntity<UserDto> signup(@RequestBody SignupDto signupDto) {
         UserDto user = authService.signup(signupDto);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto,
+                                                  HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        String[] tokens = authService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+        Cookie cookie = new Cookie("token", tokens[1]);
+        cookie.setHttpOnly(true);
+        httpServletResponse.addCookie(cookie);
+        return ResponseEntity.ok(new LoginResponseDto(tokens[0]));
     }
 
     @PostMapping("/onboardNewDriver/{userId}")
