@@ -2,7 +2,7 @@ package com.vaghani.project.ridesharing.ridesharingapp.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.geolatte.geom.Point;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
