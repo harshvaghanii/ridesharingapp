@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'  # OpenJDK distribution
-          java-version: '17'  # Change based on your project
+          java-version: '23'  # Change based on your project
 
       - name: Set Up Cache for Dependencies
         uses: actions/cache@v3
