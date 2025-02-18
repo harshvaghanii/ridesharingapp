@@ -1,10 +1,10 @@
 name: Run Tests on Every Commit
 
 on:
-  push:  # Runs on every commit push
+  push:
     branches:
-      - '*'  # Runs on all branches
-  pull_request:  # Also runs when a PR is opened to master
+      - '*'
+  pull_request:
     branches:
       - master
 
@@ -14,21 +14,24 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3  # Clones the repo
+        uses: actions/checkout@v3
 
-      - name: Set Up Java
+      - name: Set Up Java 23
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'  # OpenJDK distribution
-          java-version: '23'  # Change based on your project
+          java-version: '23'  # Use Java 23
+
+      - name: Verify Java Version
+        run: java -version  # Print Java version to verify it's correct
 
       - name: Set Up Cache for Dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2  # Cache Maven dependencies
+          path: ~/.m2
           key: maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             maven-
 
       - name: Run Tests
-        run: mvn test  # Runs all test cases
+        run: mvn test
