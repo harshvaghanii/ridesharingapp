@@ -20,7 +20,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void processPayment(Ride ride) {
         Payment payment = paymentRepository.findByRide(ride)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."Payment not found with Ride \{ride}"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Payment not found with Ride %s", ride)
+                ));
         paymentStrategyManager.paymentStrategy(payment.getPaymentMethod()).processPayment(payment);
     }
 

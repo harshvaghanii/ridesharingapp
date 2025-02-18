@@ -81,7 +81,7 @@ public class DriverServiceImpl implements DriverService {
         }
 
         if (ride.getRideStatus() != RideStatus.CONFIRMED) {
-            throw new RuntimeException(STR."Ride status is not Confirmed, hence the ride cannot be started! \{ride.getRideStatus()}");
+            throw new RuntimeException(String.format("Ride status is not Confirmed, hence the ride cannot be started! %s", ride.getRideStatus()));
         }
 
         if (!OTP.equals(ride.getOtp())) {
@@ -129,7 +129,7 @@ public class DriverServiceImpl implements DriverService {
         }
 
         if (!ride.getRideStatus().equals(RideStatus.ENDED)) {
-            throw new RuntimeException(STR."Ride status is not Ended hence cannot start rating, status: \{ride.getRideStatus()}");
+            throw new RuntimeException(String.format("Ride status is not Ended hence cannot start rating, status: %s", ride.getRideStatus()));
         }
 
         return ratingService.rateRider(ride, rating);

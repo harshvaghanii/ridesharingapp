@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
 
         User user = userRepository.findByEmail(signupDto.getEmail()).orElse(null);
         if (user != null) {
-            throw new RuntimeConflictException(STR."User with Email address \{signupDto.getEmail()} already exists!");
+            throw new RuntimeConflictException(String.format("User with Email address %s already exists!", signupDto.getEmail()));
         }
         User mappedUser = modelMapper.map(signupDto, User.class);
         mappedUser.setRoles(Set.of(Role.RIDER));
@@ -74,9 +74,9 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public DriverDto onboardNewDriver(Long userId, String vehicleId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."User with ID: \{userId} not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User with ID: %d not found!", userId)));
         if (user.getRoles().contains(Role.DRIVER)) {
-            throw new RuntimeException(STR."User with ID: \{userId} is already a Driver!");
+            throw new RuntimeException(String.format("User with ID: %s is already a Driver!", userId));
         }
 
         Driver createdDriver = Driver.builder()
@@ -94,7 +94,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String refreshToken(String refreshToken) {
         Long userId = jwtService.getUserIdFromToken(refreshToken);
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(STR."User not found with id: \{userId}"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User not found with id: %s", userId)));
 
         return jwtService.generateAccessToken(user);
     }

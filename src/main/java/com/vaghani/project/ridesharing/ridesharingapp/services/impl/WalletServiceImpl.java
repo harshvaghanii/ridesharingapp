@@ -66,7 +66,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet findWalletById(Long walletId) {
         return walletRepository.findById(walletId)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."Wallet with ID: \{walletId} not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Wallet with ID: %s not found!", walletId)));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet findByUser(User user) {
         return walletRepository.findByUser(user).orElseThrow(
-                () -> new RuntimeException(STR."Wallet not found for the User: \{user}")
+                () -> new RuntimeException(String.format("Wallet not found for the User: %s", user))
         );
     }
 }

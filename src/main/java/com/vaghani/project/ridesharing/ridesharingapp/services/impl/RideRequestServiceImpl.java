@@ -15,13 +15,16 @@ public class RideRequestServiceImpl implements RideRequestService {
 
     @Override
     public RideRequest findRideRequestById(Long rideRequestId) {
-        return rideRequestRepository.findById(rideRequestId).orElseThrow(() -> new ResourceNotFoundException(STR."Ride Request with id: \{rideRequestId} not found!"));
+        return rideRequestRepository.findById(rideRequestId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Ride Request with id: %d not found!", rideRequestId)
+                ));
     }
 
     @Override
     public void update(RideRequest rideRequest) {
         rideRequestRepository.findById(rideRequest.getId())
-                .orElseThrow(() -> new ResourceNotFoundException(STR."Ride Request with ID : \{rideRequest.getId()} not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ride Request with ID: %s not found!", rideRequest.getId())));
         rideRequestRepository.save(rideRequest);
     }
 }
