@@ -8,7 +8,6 @@ import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideRequest
 import com.vaghani.project.ridesharing.ridesharingapp.entities.enums.RideStatus;
 import com.vaghani.project.ridesharing.ridesharingapp.exceptions.ResourceNotFoundException;
 import com.vaghani.project.ridesharing.ridesharingapp.repositories.RideRepository;
-import com.vaghani.project.ridesharing.ridesharingapp.services.DriverService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideRequestService;
 import com.vaghani.project.ridesharing.ridesharingapp.services.RideService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,8 @@ public class RideServiceImpl implements RideService {
     @Override
     public Ride getRideById(Long rideId) {
         return rideRepository.findById(rideId).orElseThrow(() ->
-                new ResourceNotFoundException(STR."Ride with ID: \{rideId} not found!"));
+                new ResourceNotFoundException(String.format("Ride with ID: %s not found!", rideId))
+        );
     }
 
     @Override

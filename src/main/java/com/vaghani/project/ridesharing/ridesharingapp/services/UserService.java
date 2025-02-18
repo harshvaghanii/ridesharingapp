@@ -23,6 +23,6 @@ public final class UserService implements UserDetailsService {
 
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(STR."User not found with id: \{id}"));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User not found with id: %d", id)));
     }
 }
