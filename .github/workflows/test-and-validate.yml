@@ -1,0 +1,34 @@
+name: Run Tests on Every Commit
+
+on:
+  push:  # Runs on every commit push
+    branches:
+      - '*'  # Runs on all branches
+  pull_request:  # Also runs when a PR is opened to master
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Clones the repo
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'  # OpenJDK distribution
+          java-version: '17'  # Change based on your project
+
+      - name: Set Up Cache for Dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2  # Cache Maven dependencies
+          key: maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-
+
+      - name: Run Tests
+        run: mvn test  # Runs all test cases
